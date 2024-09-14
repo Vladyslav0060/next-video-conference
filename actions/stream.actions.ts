@@ -20,3 +20,17 @@ export const tokenProvider = async () => {
   });
   return token;
 };
+
+export const deleteCall = async (callId: string) => {
+  try {
+    const user = await currentUser();
+    if (!user) throw new Error("User is not authenticated");
+    if (!apiKey || !apiSecret)
+      throw new Error("Stream API key and secret are required");
+    const streamClient = new StreamClient(apiKey, apiSecret);
+    const call = streamClient.video.call("default", callId);
+    await call.delete({ hard: true });
+  } catch (error) {
+    // console.error(error);
+  }
+};

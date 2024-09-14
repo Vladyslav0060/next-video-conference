@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node api.js && next dev",
+    "build": "node api.js && next build",
+    "start": "node api.js && next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.438.0",
     "next": "latest",
+    "p-limit": "^6.1.0",
     "react": "latest",
     "react-datepicker": "^7.3.0",
     "react-dom": "latest",
