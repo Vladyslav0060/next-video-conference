@@ -19,11 +19,10 @@ interface MeetingModalProps {
   children?: React.ReactNode;
   handleClick: () => void;
   buttonText?: string;
-  image?: string;
   buttonIcon?: string;
 }
 
-const MeetingModal = ({
+const DeleteModal = ({
   isOpen,
   onClose,
   title,
@@ -31,7 +30,6 @@ const MeetingModal = ({
   children,
   handleClick,
   buttonText,
-  image,
   buttonIcon,
 }: MeetingModalProps) => {
   return (
@@ -39,25 +37,20 @@ const MeetingModal = ({
       {/* <DialogTrigger>Open</DialogTrigger> */}
       <DialogContent className="flex w-full max-w-[520px] flex-col gap-6 border-none bg-dark-1 px-6 py-9 text-white">
         <div className="flex flex-col gap-6">
-          {image && (
-            <div className="flex justify-center">
-              <Image src={image} width={72} height={72} alt="image" />
-            </div>
-          )}
-
-          <h1 className={cn("text-3xl font-bold leading-[42px]", className)}>
-            {title}
-          </h1>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription className="text-neutral-300">
+            This action cannot be undone. This will permanently delete the
+            meeting from our servers.
+          </DialogDescription>
           {children}
           <Button
-            className="bg-blue-1 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="bg-warning focus-visible:ring-0 focus-visible:ring-offset-0"
             onClick={handleClick}
           >
             {buttonIcon && (
               <Image src={buttonIcon} width={13} height={13} alt="" />
             )}{" "}
-            &nbsp;
-            {buttonText || "Schedule Meeting"}
+            &nbsp; Delete Meeting
           </Button>
         </div>
       </DialogContent>
@@ -65,4 +58,4 @@ const MeetingModal = ({
   );
 };
 
-export default MeetingModal;
+export default DeleteModal;

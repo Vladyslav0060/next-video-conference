@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { avatarImages } from "@/constants";
 import { useToast } from "./ui/use-toast";
+import DeleteModal from "./DeleteModal";
+import { useState } from "react";
 
 interface MeetingCardProps {
   title: string;
@@ -15,6 +17,7 @@ interface MeetingCardProps {
   buttonIcon1?: string;
   buttonText?: string;
   handleClick: () => void;
+  handleDeleteClick: () => void;
   link: string;
 }
 
@@ -25,15 +28,25 @@ const MeetingCard = ({
   isPreviousMeeting,
   buttonIcon1,
   handleClick,
+  handleDeleteClick,
   link,
   buttonText,
 }: MeetingCardProps) => {
   const { toast } = useToast();
-
+  const [deleteModalOpened, setDeleteModalOpened] = useState<boolean>(false);
   return (
     <section className="flex min-h-[258px] w-full flex-col justify-between rounded-[14px] bg-dark-1 px-5 py-8 xl:max-w-[568px]">
       <article className="flex flex-col gap-5">
-        <Image src={icon} alt="upcoming" width={28} height={28} />
+        <div className="flex flex-row justify-between items-center">
+          <Image src={icon} alt="upcoming" width={28} height={28} />
+          <Image
+            src="/icons/trash.svg"
+            width={23}
+            height={23}
+            alt=""
+            onClick={() => setDeleteModalOpened(true)}
+          />
+        </div>
         <div className="flex justify-between">
           <div className="flex flex-col gap-2">
             <h1 className="text-2xl font-bold">{title}</h1>
@@ -42,7 +55,7 @@ const MeetingCard = ({
         </div>
       </article>
       <article className={cn("flex justify-center relative", {})}>
-        <div className="relative flex w-full max-sm:hidden">
+        {/* <div className="relative flex w-full max-sm:hidden">
           {avatarImages.map((img, index) => (
             <Image
               key={index}
@@ -57,34 +70,47 @@ const MeetingCard = ({
           <div className="flex-center absolute left-[136px] size-10 rounded-full border-[5px] border-dark-3 bg-dark-4">
             +5
           </div>
+        </div> */}
+        <div className="flex flex-row justify-between w-full">
+          {!isPreviousMeeting && (
+            <div className="flex gap-2">
+              <Button onClick={handleClick} className="rounded bg-blue-1 px-6">
+                {buttonIcon1 && (
+                  <Image
+                    src={buttonIcon1}
+                    alt="feature"
+                    width={20}
+                    height={20}
+                  />
+                )}
+                &nbsp; {buttonText}
+              </Button>
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(link);
+                  toast({
+                    title: "Link Copied",
+                  });
+                }}
+                className="bg-dark-4 px-6"
+              >
+                <Image
+                  src="/icons/copy.svg"
+                  alt="feature"
+                  width={20}
+                  height={20}
+                />
+                &nbsp; Copy Link
+              </Button>
+            </div>
+          )}
         </div>
-        {!isPreviousMeeting && (
-          <div className="flex gap-2">
-            <Button onClick={handleClick} className="rounded bg-blue-1 px-6">
-              {buttonIcon1 && (
-                <Image src={buttonIcon1} alt="feature" width={20} height={20} />
-              )}
-              &nbsp; {buttonText}
-            </Button>
-            <Button
-              onClick={() => {
-                navigator.clipboard.writeText(link);
-                toast({
-                  title: "Link Copied",
-                });
-              }}
-              className="bg-dark-4 px-6"
-            >
-              <Image
-                src="/icons/copy.svg"
-                alt="feature"
-                width={20}
-                height={20}
-              />
-              &nbsp; Copy Link
-            </Button>
-          </div>
-        )}
+        <DeleteModal
+          isOpen={deleteModalOpened}
+          handleClick={handleDeleteClick}
+          onClose={() => setDeleteModalOpened(false)}
+          title="Are you absolutely sure?"
+        />
       </article>
     </section>
   );

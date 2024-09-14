@@ -25,6 +25,30 @@
 
 /* ==== clerk class override ===== */
 
+.cl-userButtonPopoverActionButton:hover {
+  color: inherit;
+}
+.cl-navbarButton {
+  color: white;
+}
+.cl-navbarButton:hover {
+  background-color: rgba(0, 0, 0, 0.07);
+}
+.cl-navbarButton.cl-active {
+  background: rgb(14 120 249 / var(--tw-bg-opacity));
+}
+.cl-badge {
+  color: rgba(11, 122, 249, 1);
+}
+.cl-internal-zpbffa[data-color="primary"] {
+  box-shadow: rgba(11, 122, 249, 0.849) 0px 0px 0px 1px,
+    rgba(10, 26, 212, 0.822) 0px 2px 0px -1px;
+}
+
+/* p[class^="cl-internal"] {
+  color: white;
+} */
+
 .cl-userButtonPopoverActionButtonIcon {
   color: white;
 }
