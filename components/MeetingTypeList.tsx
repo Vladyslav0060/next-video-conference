@@ -20,11 +20,15 @@ interface values {
   link: string;
 }
 
+type MeetingStateType =
+  | "isScheduleMeeting"
+  | "isJoiningMeeting"
+  | "isInstantMeeting"
+  | undefined;
+
 const MeetingTypeList = () => {
   const router = useRouter();
-  const [meetingState, setMeetingState] = useState<
-    "isScheduleMeeting" | "isJoiningMeeting" | "isInstantMeeting" | undefined
-  >();
+  const [meetingState, setMeetingState] = useState<MeetingStateType>();
   const [values, setValues] = useState<values>({
     dateTime: new Date(),
     description: "",
@@ -35,7 +39,7 @@ const MeetingTypeList = () => {
   const { user } = useUser();
   const client = useStreamVideoClient();
 
-  const createMeeting = async () => {
+  const createMeeting = async (meetingState: MeetingStateType) => {
     if (!client || !user) return;
 
     try {
@@ -55,7 +59,7 @@ const MeetingTypeList = () => {
       });
 
       setCallDetails(call);
-      if (!values.description) {
+      if (meetingState === "isInstantMeeting") {
         router.push(`/meeting/${call.id}`);
       }
       toast({ title: "Meeting has been created" });
@@ -98,12 +102,12 @@ const MeetingTypeList = () => {
         className="bg-yellow-1"
       />
 
-      {!callDetails ? (
+      {!callDetails && meetingState ? (
         <MeetingModal
           isOpen={meetingState === "isScheduleMeeting"}
           onClose={() => setMeetingState(undefined)}
           title="Create meeting"
-          handleClick={createMeeting}
+          handleClick={() => createMeeting(meetingState)}
         >
           <div className="flex flex-col gap-2.5">
             <label className="text-base text-normal leading-[22px] text-sky-2">
@@ -135,7 +139,10 @@ const MeetingTypeList = () => {
       ) : (
         <MeetingModal
           isOpen={meetingState === "isScheduleMeeting"}
-          onClose={() => setMeetingState(undefined)}
+          onClose={() => {
+            setMeetingState(undefined);
+            setCallDetails(undefined);
+          }}
           title="Meeting Created"
           className="text-center"
           handleClick={() => {
@@ -154,7 +161,7 @@ const MeetingTypeList = () => {
         title="Start an instant meeting"
         className="text-center"
         buttonText="Start meeting"
-        handleClick={createMeeting}
+        handleClick={() => createMeeting(meetingState)}
       />
 
       <MeetingModal
